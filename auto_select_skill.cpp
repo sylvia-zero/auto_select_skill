@@ -211,3 +211,37 @@ autoskill
 
 İyi Eğlenceler.
 Nyami
+
+
+//Not Split Argumant Yoksa Ekleyin
+//Server Src
+//game
+//utils.cpp
+//Bul
+#include "stdafx.h"
+
+//Altına Ekle
+#include <boost/algorithm/string/classification.hpp>
+#include <boost/algorithm/string/split.hpp>
+
+
+//Bul
+const char *two_arguments(const char *argument, char *first_arg, size_t first_size, char *second_arg, size_t second_size)
+{
+	return (one_argument(one_argument(argument, first_arg, first_size), second_arg, second_size));
+}
+
+//Altına Ekle
+void split_argument(const char *argument, std::vector<std::string> & vecArgs)
+{
+	std::string arg = argument;
+	boost::split(vecArgs, arg, boost::is_any_of(" "), boost::token_compress_on);
+}
+
+
+//utils.h
+//Bul
+extern const char *	two_arguments(const char *argument, char *first_arg, size_t first_size, char *second_arg, size_t second_size);
+
+//Altına Ekle
+extern const char *	first_cmd(const char *argument, char *first_arg, size_t first_arg_size, size_t *first_arg_len_result);
