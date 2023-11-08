@@ -245,3 +245,219 @@ extern const char *	two_arguments(const char *argument, char *first_arg, size_t 
 
 //Altına Ekle
 extern const char *	first_cmd(const char *argument, char *first_arg, size_t first_arg_size, size_t *first_arg_len_result);
+
+
+
+
+
+//08.11.2023 GÜNCELLEME
+//char.cpp
+//Bul
+	sync_time = 0;
+	
+	m_dwPacketAntiFloodCount = 0;
+	m_dwPacketAntiFloodPulse = 0;
+
+//Altına Ekle
+#ifdef ENABLE_AUTO_SELECT_SKILL
+	LastSkillReset = 0;
+#endif
+
+
+//char.h
+//Bul
+		float GetDamMul() { return this->m_fDamMul; }
+		void SetDamMul(float newDamMul) {this->m_fDamMul = newDamMul; }
+
+//Altına Ekle
+#ifdef ENABLE_AUTO_SELECT_SKILL
+	protected:
+		int				LastSkillReset;
+#endif
+
+
+//char_item.cpp
+//Bul
+							case 71013: // 축제용폭죽
+								CreateFly(number(FLY_FIREWORK1, FLY_FIREWORK6), this);
+								item->SetCount(item->GetCount() - 1);
+								break;
+
+//Altına Ekle
+#ifdef ENABLE_AUTO_SELECT_SKILL
+							case 84001:
+								if (get_global_time() < LastSkillReset + 40)
+								{
+									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You can use in %d seconds."), 40 - (get_global_time() - LastSkillReset));
+									return false;
+								}
+								LastSkillReset = get_global_time();
+								RemoveGoodAffect();
+								ClearSkill();
+								SetSkillGroup(0);
+								if(GetSkillGroup() == 0 && GetLevel() >= 5)
+									ChatPacket(CHAT_TYPE_COMMAND, "OpenAutoSkill");
+								item->SetCount(item->GetCount() - 1);
+								break;
+#endif
+
+
+
+//cmd_general.cpp
+//Bul
+#ifdef ENABLE_AUTO_SELECT_SKILL
+ACMD(do_skillauto)
+{
+	std::vector<std::string> vecArgs;
+	split_argument(argument, vecArgs);
+	if (vecArgs.size() < 2) { return; }
+	else if (vecArgs[1] == "select")
+	{
+		if (vecArgs.size() < 3) { return; }
+		if (ch->GetSkillGroup() != 0) { return; }
+		BYTE skillIndex;
+		str_to_number(skillIndex, vecArgs[2].c_str());
+		if(skillIndex > 2) { return; }
+		ch->RemoveGoodAffect();
+		ch->SetSkillGroup(skillIndex);
+		ch->ClearSkill();
+		ch->SetSkillLevel(121,50);
+		ch->SetSkillLevel(122,2);
+		ch->SetSkillLevel(124,50);
+		ch->SetSkillLevel(126,50);
+		ch->SetSkillLevel(127,50);
+		ch->SetSkillLevel(128,50);
+		ch->SetSkillLevel(129,50);
+		ch->SetSkillLevel(130,21);
+		ch->SetSkillLevel(131,20);
+		ch->SetSkillLevel(137,20);
+		ch->SetSkillLevel(138,20);
+		ch->SetSkillLevel(139,20);
+		if (ch->GetJob() == 1) { ch->SetSkillLevel(140,20); }
+		ch->SkillLevelPacket();
+	}
+}
+#endif
+
+//Değiştir
+#ifdef ENABLE_AUTO_SELECT_SKILL
+ACMD(do_skillauto)
+{
+	std::vector<std::string> vecArgs;
+	split_argument(argument, vecArgs);
+	if (vecArgs.size() < 2) { return; }
+	else if (vecArgs[1] == "select")
+	{
+		if (vecArgs.size() < 3) { return; }
+		if (ch->GetSkillGroup() != 0) { return; }
+		BYTE skillIndex;
+		str_to_number(skillIndex, vecArgs[2].c_str());
+		if(skillIndex > 2) { return; }
+		ch->RemoveGoodAffect();
+		ch->SetSkillGroup(skillIndex);
+		ch->ClearSkill();
+		ch->SetSkillLevel(121,50);
+		ch->SetSkillLevel(122,2);
+		ch->SetSkillLevel(124,50);
+		ch->SetSkillLevel(126,50);
+		ch->SetSkillLevel(127,50);
+		ch->SetSkillLevel(128,50);
+		ch->SetSkillLevel(129,50);
+		ch->SetSkillLevel(130,30);
+		ch->SetSkillLevel(131,50);
+		ch->SetSkillLevel(137,50);
+		ch->SetSkillLevel(138,50);
+		ch->SetSkillLevel(139,50);
+		if (ch->GetJob() == 0)
+		{
+			if(skillIndex == 1)
+			{
+				ch->SetSkillLevel(1,50);
+				ch->SetSkillLevel(2,50);
+				ch->SetSkillLevel(3,50);
+				ch->SetSkillLevel(4,50);
+				ch->SetSkillLevel(5,50);
+			}else
+			{
+				ch->SetSkillLevel(16,50);
+				ch->SetSkillLevel(17,50);
+				ch->SetSkillLevel(18,50);
+				ch->SetSkillLevel(19,50);
+				ch->SetSkillLevel(20,50);
+			}
+		}
+		if (ch->GetJob() == 1)
+		{
+			if(skillIndex == 1)
+			{
+				ch->SetSkillLevel(31,50);
+				ch->SetSkillLevel(32,50);
+				ch->SetSkillLevel(33,50);
+				ch->SetSkillLevel(34,50);
+				ch->SetSkillLevel(35,50);
+			}else
+			{
+				ch->SetSkillLevel(46,50);
+				ch->SetSkillLevel(47,50);
+				ch->SetSkillLevel(48,50);
+				ch->SetSkillLevel(49,50);
+				ch->SetSkillLevel(50,50);
+			}
+			ch->SetSkillLevel(140,20);
+		}
+		if (ch->GetJob() == 2)
+		{
+			if(skillIndex == 1)
+			{
+				ch->SetSkillLevel(61,50);
+				ch->SetSkillLevel(62,50);
+				ch->SetSkillLevel(63,50);
+				ch->SetSkillLevel(64,50);
+				ch->SetSkillLevel(65,50);
+				ch->SetSkillLevel(66,50);
+			}else
+			{
+				ch->SetSkillLevel(76,50);
+				ch->SetSkillLevel(77,50);
+				ch->SetSkillLevel(78,50);
+				ch->SetSkillLevel(79,50);
+				ch->SetSkillLevel(80,50);
+				ch->SetSkillLevel(81,50);
+			}
+		}
+		if (ch->GetJob() == 3)
+		{
+			if(skillIndex == 1)
+			{
+				ch->SetSkillLevel(91,50);
+				ch->SetSkillLevel(92,50);
+				ch->SetSkillLevel(93,50);
+				ch->SetSkillLevel(94,50);
+				ch->SetSkillLevel(95,50);
+				ch->SetSkillLevel(96,50);
+			}else
+			{
+				ch->SetSkillLevel(106,50);
+				ch->SetSkillLevel(107,50);
+				ch->SetSkillLevel(108,50);
+				ch->SetSkillLevel(109,50);
+				ch->SetSkillLevel(110,50);
+				ch->SetSkillLevel(111,50);
+			}
+		}
+		ch->SkillLevelPacket();
+	}
+}
+#endif
+
+
+
+
+//PROTO
+84001	Beceri Sıfırlama Nesnesi
+84001	???????	ITEM_USE	USE_SPECIAL	1	ANTI_DROP | ANTI_GIVE | ANTI_MYSHOP | ANTI_SAFEBOX | ANTI_STACK	LOG	NONE	NONE	0	0	0	0	0	LIMIT_NONE	0	LIMIT_NONE	0	APPLY_NONE	0	APPLY_NONE	0	APPLY_NONE	0	0	0	0	0	0	0	0	0	0
+
+
+
+//Locale_xx//item_lis.txt
+84001	ETC	icon/item/71173.tga	
